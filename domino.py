@@ -226,6 +226,25 @@ def _all_sizes(trees: List[Tree]) -> List[int]:
     return sizes
 
 
+def a_number(a: Tuple[int, ...]) -> int:
+    """Number of cyclic 0→1 transitions in the exponent sequence."""
+    n = len(a)
+    return sum(1 for i in range(n) if a[i] == 0 and a[(i + 1) % n] == 1)
+
+
+def _combined(g: int, a: Tuple[int, ...]) -> Tuple[List[int], List[int]]:
+    """Return (combined type-seq sizes sorted, combined Isog sorted desc) for one exponent sequence."""
+    combined_sizes: List[int] = []
+    combined_isog: List[int] = []
+    for comp in step2(a):
+        b = step3(comp)
+        _, _, trees = step5(b)
+        combined_sizes.extend(sorted(_all_sizes(trees)))
+        _, isog = step6(trees)
+        combined_isog.extend(isog)
+    return sorted(combined_sizes), sorted([x for x in combined_isog if x > 0], reverse=True)
+
+
 def analyze(g: int) -> None:
     print(f"\n{'=' * 62}")
     print(f"  g = {g}   (sequences of length {2 * g}, sum = {g})")
@@ -275,14 +294,28 @@ def analyze(g: int) -> None:
     print()
 
 
+def analyze_compact(g: int) -> None:
+    print(f"\ng = {g}")
+    for si, a in enumerate(step1(g), 1):
+        ts, isog = _combined(g, a)
+        print(f"  {si:2d}.  a-seq={list(a)}  a-number={a_number(a)}  type-seq={ts}  sum={sum(ts)}  Isog={isog}")
+    print()
+
+
 def main() -> None:
+    compact = True
     if len(sys.argv) > 1:
         args = sys.argv[1:]
     else:
         try:
-            args = input("Enter g value(s) (integers ≥ 1, space-separated): ").split()
+            raw = input("Enter g value(s) (integers ≥ 1, space-separated) [-v for verbose]: ")
+            args = raw.split()
         except EOFError:
             return
+
+    if "-v" in args:
+        compact = False
+        args = [a for a in args if a != "-v"]
 
     for arg in args:
         try:
@@ -293,7 +326,10 @@ def main() -> None:
         if g < 1:
             print(f"Skipping g={g}: must be ≥ 1")
             continue
-        analyze(g)
+        if compact:
+            analyze_compact(g)
+        else:
+            analyze(g)
 
 
 if __name__ == "__main__":
