@@ -72,7 +72,7 @@ This algorithm computes the following invariants of $U$ (and hence of $\widehat{
 
 | Invariant | Description |
 |-----------|-------------|
-| **a-number** | Number of cyclic $0 \to 1$ transitions in the exponent sequence; equals $\dim_k \operatorname{Hom}(\alpha_p, X[p])$ |
+| **a-number** | Number of cyclic $0 \to 1$ transitions in the exponent sequence; equals $\dim_k \mathrm{Hom}(\alpha_p, X[p])$ |
 | **dim** | $\dim U$: depends only on $g$ and the Newton polygon of $H^2$ (all Newton polygons coincide in the supersingular case) |
 | **p-exp** | Smallest power of $p$ annihilating $U$ |
 | **type-seq** | By Ekedahl, every domino carries a unique decreasing filtration whose $i$-th associated graded piece is a direct sum of elementary dominoes $U_i$. The type sequence is the nondecreasing list of integers $i$ appearing in this graded, counted with multiplicity |
@@ -112,11 +112,11 @@ Because $b$ closes cyclically (as shown in Step 3), it is treated as a **cyclic 
 
 For each indecomposable arc $(b_1, \ldots, b_m)$:
 
-- **dim** $= \#\{i : b_{i+1} = b_i - 1\}$ (with $b_{m+1} := 0$)
+- **dim** $= |\{i : b_{i+1} = b_i - 1\}|$ (with $b_{m+1} := 0$)
 - **p-exp** $= \max_i b_i$
 - **type-seq**: a rooted tree built recursively,
 
-  $$\operatorname{type\text{-}seq}(b_1, \ldots, b_m) = \operatorname{Tree}\!\bigl(m,\; \text{children from type-seq of indecomp. parts of } (b_1{-}1,\ldots,b_m{-}1)\bigr)$$
+  $$\mathrm{type\text{-}seq}(b_1, \ldots, b_m) = \mathrm{Tree}\!\bigl(m,\; \text{children from type-seq of indecomp. parts of } (b_1{-}1,\ldots,b_m{-}1)\bigr)$$
 
   terminating when all values reach zero (leaf node). Node labels are arc lengths; the multiset of all labels, sorted nondecreasing, is the type sequence of $U$.
 
@@ -129,7 +129,7 @@ The type-seq forest is processed by the **Greene–Kleitman algorithm** (iterati
 1. Count all current leaf nodes; append count to a list.
 2. Remove all leaves; repeat until the forest is empty.
 
-The resulting counts, sorted in decreasing order, form a partition of the total node count. Its **conjugate partition** (transpose of the Young diagram) is $\operatorname{Isog}(\widehat{\mathrm{Br}}_X)$.
+The resulting counts, sorted in decreasing order, form a partition of the total node count. Its **conjugate partition** (transpose of the Young diagram) is $\mathrm{Isog}(\widehat{\mathrm{Br}}_X)$.
 
 *Example*: $[4, 2, 1] \mapsto [3, 2, 1, 1]$.
 
@@ -160,7 +160,7 @@ $$b = (1, 0, 0, 1), \qquad \mathrm{Fil}^1_{\mathrm{HW}} = W\langle pe_1,\; e_2,\
 
 **Step 5.** For the arc $(1, 1)$:
 
-- $\mathrm{dim} = \#\{i : b_{i+1} = b_i - 1\} = 1$ (only the final drop $(1) \to 0$)
+- $\mathrm{dim} = |\{i : b_{i+1} = b_i - 1\}| = 1$ (only the final drop $(1) \to 0$)
 - $\mathrm{p\text{-}exp} = 1$
 - $\mathrm{type\text{-}seq}$: subtract $1$ to get $(0, 0)$, no nonzero arcs $\Rightarrow$ leaf. Tree $= \mathrm{Leaf}(2)$.
 
