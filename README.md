@@ -7,6 +7,12 @@ A Python implementation of a simplified version of **Nygaard's reconstruction al
 
 ---
 
+## AI Disclaimer
+
+This package was designed by Yuanning Zhang and written almost entirely by Claude Code. YZ provided the mathematical framework and pseudocode for this project, and Claude Code translated it into Python programs. The output has been compared and verified up to dimension 6 by handmade computations of YZ.
+
+---
+
 ## Mathematical Background
 
 ### Setting
