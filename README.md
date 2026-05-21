@@ -3,7 +3,7 @@
 A Python implementation of a simplified version of **Nygaard's reconstruction algorithm**, which computes invariants of the formal Brauer group $\widehat{\mathrm{Br}}_X$ of a supersingular abelian $g$-fold. The simplification relies on two key assumptions:
 
 1. **Supersingularity**: $X$ is supersingular, so $\widehat{\mathrm{Br}}_X$ is unipotent and $H^2(X, W\mathcal{O}_X)$ consists purely of domino pieces.
-2. **Cyclic Frobenius action**: the Frobenius $\varphi$ acts cyclically on $M = H^1_{\mathrm{crys}}(X/W)$, i.e. there is a basis in which the matrix of $\varphi$ is a cyclic (companion) matrix.
+2. **Cyclic Frobenius action**: the $F$-crystal Frobenius $\varphi$ acts cyclically on $M = H^1_{\mathrm{crys}}(X/W)$, i.e. there is a basis in which the matrix of $\varphi$ is a weighted cyclic permutation matrix, or **cyclic matrix** for short.
 
 ---
 
@@ -17,48 +17,32 @@ This package was designed by Yuanning Zhang and written almost entirely by Claud
 
 ### Setting
 
-Let $X$ be a supersingular abelian $g$-fold over an algebraically closed field $k$ of characteristic $p$. The covariant Dieudonné module $M = H^1_{\mathrm{crys}}(X/W)$ is the first crystalline cohomology of $X$: a free $W(k)$-module of rank $2g$ carrying the structure of an $F$-crystal.
+Let $X$ be a supersingular abelian $g$-fold over an algebraically closed field $k$ of characteristic $p$. The covariant Dieudonné module $M = H^1_{\mathrm{crys}}(X/W)$ is the first crystalline cohomology of $X$: a free $W(k)$-module of rank $2g$ carrying the structure of an $F$-crystal $(M,\varphi)$.
 
-This program works under the assumption that $F$ acts **cyclically** on $M$: there exists a basis $e_1, \ldots, e_{2g}$ such that
+This program works under the assumption that $\varphi$ acts **cyclically** on $M$: there exists a basis $e_1, \ldots, e_{2g}$ of $M$ such that
 
-$$F(e_i) = p^{a_i} u_i \, e_{i+1 \bmod 2g}$$
+$$\varphi(e_i) = p^{a_i} u_i \, e_{i+1}$$
 
-for units $u_i \in W(k)$. The **exponent sequence** $a = (a_1, \ldots, a_{2g})$ records the $p$-adic valuations of the entries of this cyclic matrix. Because $X$ is supersingular of dimension $g$:
+for units $u_i \in W(k)^\times$, and the indices are interpreted in the mod $2g$ sense. The **exponent sequence** $a = (a_1, \ldots, a_{2g})$ records the $p$-adic valuations of the nonzero entries of this cyclic matrix. Because $X$ is supersingular of dimension $g$, we require the sequence $a$ to satisfy the following conditions:
 
 - $a_i \in \{0, 1\}$ for all $i$
 - $\sum a_i = g$
 
 Two exponent sequences differing by a cyclic rotation define isomorphic $F$-crystals, so we work with **rotation equivalence classes**.
 
-### From $H^1$ to $H^2$: the exterior square
+### From $H_{\mathrm{crys}}^1$ to $H_{\mathrm{crys}}^2$: the exterior square
 
-The second crystalline cohomology is computed as the exterior square of the $F$-crystal:
+The $n$-th crystalline cohomology $H^n_{\mathrm{crys}}$ of any  abelian variety $X/k$ is computed as the $n$-th exterior power of $H^1_{\mathrm{crys}}$ as $F$-crystals. The case of interest for this project is $n=2$:
 
 $$H^2_{\mathrm{crys}}(X/W) = \Lambda^2 H^1_{\mathrm{crys}}(X/W) = \Lambda^2 M.$$
 
 ### Nygaard reconstruction and the formal Brauer group
 
-For a Mazur–Ogus variety $X/k$ (i.e. torsion-free crystalline cohomology and Hodge–de Rham degeneration), the **Nygaard reconstruction theorem** takes as input the $F$-crystal $H^2_{\mathrm{crys}}(X/W)$ and recovers the **formal Brauer group** $\widehat{\mathrm{Br}}_X$.
+For a Mazur–Ogus variety $X/k$ (i.e. torsion-free crystalline cohomology and Hodge–de Rham degeneration), the **Nygaard reconstruction algorithm** takes as input the $F$-crystal $H^2_{\mathrm{crys}}(X/W)$ and recovers the **formal Brauer group** $\widehat{\mathrm{Br}}_X$, or equivalently it recovers the Hodge-Witt cohomology $H^2(X,W\mathcal{O}_X)$ as a Dieudonné module.
 
 The formal group $\widehat{\mathrm{Br}}_X$ is associated to the Dieudonné module $H^2(X, W\mathcal{O}_X)$, which is precisely the Cartier–Dieudonné module of $p$-typical curves on $\widehat{\mathrm{Br}}_X$.
 
 For **supersingular** abelian varieties this reconstruction is especially clean: $H^2(X, W\mathcal{O}_X)$ has no finite-free Dieudonné part and consists entirely of **domino** part. Consequently $\widehat{\mathrm{Br}}_X$ is **unipotent**: a finite iterated extension of $\widehat{\mathbb{G}}_a$.
-
-### The domino $U$ and the Hodge–Witt filtration
-
-Denote by $U$ the domino
-
-$$U = \bigl(d \colon U^0 \to U^1\bigr) := \bigl(d \colon H^2(X, W\mathcal{O}_X) \to H^2(X, W\Omega^1_X)\bigr).$$
-
-The F-crystal $H^2_{\mathrm{crys}}(X/W)$ carries a **Hodge–Witt filtration**. Its first filtered piece $\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}}$ is the largest sub-F-crystal on which the Frobenius $\varphi$ is divisible by $p$. Given a basis $e_1, \ldots, e_n$ for a $\Lambda^2$-component with b-sequence $(b_1, \ldots, b_n)$, this filtered piece is
-
-$$\mathrm{Fil}^1_{\mathrm{HW}} = W\langle p^{b_1} e_1,\; p^{b_2} e_2,\; \ldots,\; p^{b_n} e_n \rangle.$$
-
-For example, the b-sequence $(1, 0, 0, 1)$ with basis $\{e_1, e_2, e_3, e_4\}$ gives $\mathrm{Fil}^1_{\mathrm{HW}} = W\langle pe_1, e_2, e_3, pe_4\rangle$.
-
-The quotient recovers the kernel of the domino differential and coincides with the $E_\infty^{02}$ term of the slope spectral sequence:
-
-$$H^2_{\mathrm{crys}} \big/ \mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}} \;\cong\; \ker(d \colon U^0 \to U^1) \;=\; E_\infty^{02}.$$
 
 ### The Raynaud ring and elementary dominoes
 
@@ -66,13 +50,37 @@ The natural algebraic structure governing dominoes is the **Raynaud ring**
 
 $$R = W_\sigma[F, V, d] \big/ (FV = VF = p,\; d^2 = 0,\; FdV = d),$$
 
-graded by $\deg(F) = \deg(V) = 0$, $\deg(d) = 1$. It splits as $R = R^0 \oplus R^1$, where $R^0 \cong \mathbb{D}$ is the Dieudonné ring.
+graded by $\deg(F) = \deg(V) = 0$, and $\deg(d) = 1$. It concentrates in degree $0$ and $1$ as $R = R^0 \oplus R^1$, where $R^0 \cong \mathbb{D}$ is the Dieudonné ring.
 
 For each integer $j \geq 1$, the **elementary domino of type $j$** is the $R$-module
 
 $$U_j = \bigl(U_j^0 \xrightarrow{d} U_j^1\bigr) := \bigl(k[\![V]\!] \xrightarrow{d} \textstyle\prod_{i=j}^{\infty} k\, dV^i\bigr),$$
 
 where $F = 0$ and $V$ acts injectively on $U_j^0$, while $F$ acts surjectively and $V = 0$ on $U_j^1$. (For negative $i$, the convention $dV^i = F^{-i}d$ is used.) Here $\dim U_j := \dim_k(U_j^0 / V) = 1$, so $U_j$ is a **1-dimensional domino**, and up to isomorphism the $U_j$ are precisely all 1-dimensional dominoes. In general, a **domino** $$U=\bigl(U^0 \xrightarrow{d} U^1\bigr)$$ is a finite iterated extension of elementary dominoes as $R$-modules.
+
+### The domino $U$ and the Hodge–Witt filtration
+
+From now on, let us fix a supersingular abelian variety $X/k$ of dimension $g$. Denote by $U$ the domino
+
+$$U = \bigl(d \colon U^0 \to U^1\bigr) := \bigl(d \colon H^2(X, W\mathcal{O}_X) \to F^\infty B\subseteq H^2(X, W\Omega^1_X)),$$
+
+where $F^\infty B$ is the smallest sub-Dieudonné module of $H^2(X, W\Omega^1_X)$ that contains $B:=im(d)$.
+
+The F-crystal $(H^2_{\mathrm{crys}}(X/W),\varphi)$ carries a **Hodge–Witt filtration** defined via the stupid truncations of the de Rham-Witt complex. The first filtered piece $\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}}$ is the largest sub-$F$-crystal on which the Frobenius $\varphi$ is divisible by $p$. Consider the short exact sequence of $W$-modules
+
+$$0\to \mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}}\to H^2_{\mathrm{crys}}\to H^2_{\mathrm{crys}}/\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}}\to 0.$$
+
+The quotient recovers the kernel of the domino differential in $U$ and coincides with the $E_\infty^{02}$ term of the slope spectral sequence:
+
+$$H^2_{\mathrm{crys}} \big/ \mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}} \;\cong\; \ker(d \colon U^0 \to U^1) \;=\; E_\infty^{02},$$
+
+and this identification is a consequence of Ekedahl's Poincaré duality which forces the vanishing of $E_r$-page differentials from the source $E_r^{02}$ for all $r\ge 2$.
+
+Under the hypothesis that $\varphi$ acts cyclically on $H^1_{\mathrm{crys}}(X/W)$, it easily follows that $\varphi$ acts cyclically on $H^2_{\mathrm{crys}}(X/W)$, which has rank $n=\binom{2g}{2}$. Let $e_1, \ldots, e_n$ be such a basis of $H^2_{\mathrm{crys}}$ on which $\varphi$ acts cyclically. An observation is that there exists a sequence $b=(b_1, \ldots, b_n)$ for which the filtered piece $\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_\mathrm{crys}$ can be expressed as
+
+$$\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_\mathrm{crys} = W\langle p^{b_1} e_1,\; p^{b_2} e_2,\; \ldots,\; p^{b_n} e_n \rangle.$$
+
+For example, the $b$-sequence $(1, 0, 0, 1)$ with basis $\{e_1, e_2, e_3, e_4\}$ gives rise to $\mathrm{Fil}^1_{\mathrm{HW}} = W\langle pe_1, e_2, e_3, pe_4\rangle$.
 
 This algorithm computes the following invariants of $U$ (and hence of $\widehat{\mathrm{Br}}_X$):
 
