@@ -56,7 +56,7 @@ For each integer $j \geq 1$, the **elementary domino of type $j$** is the $R$-mo
 
 $$U_j = \bigl(U_j^0 \xrightarrow{d} U_j^1\bigr) := \bigl(k[\![V]\!] \xrightarrow{d} \textstyle\prod_{i=j}^{\infty} k\, dV^i\bigr),$$
 
-where $F = 0$ and $V$ acts injectively on $U_j^0$, while $F$ acts surjectively and $V = 0$ on $U_j^1$. (For negative $i$, the convention $dV^i = F^{-i}d$ is used.) Here $\dim U_j := \dim_k(U_j^0 / V) = 1$, so $U_j$ is a **1-dimensional domino**, and up to isomorphism the $U_j$ are precisely all 1-dimensional dominoes. In general, a **domino** $$U=\bigl(U^0 \xrightarrow{d} U^1\bigr)$$ is a finite iterated extension of elementary dominoes as $R$-modules.
+where $F = 0$ and $V$ acts injectively on $U_j^0$, while $F$ acts surjectively and $V = 0$ on $U_j^1$. Moreover, for negative $i$, the convention $dV^i = F^{-i}d$ is used. Here $\dim U_j := \dim_k(U_j^0 / V) = 1$, so $U_j$ is a **1-dimensional domino**, and up to isomorphism the $U_j$ are precisely all 1-dimensional dominoes. In general, a **domino** $$U=\bigl(U^0 \xrightarrow{d} U^1\bigr)$$ is a finite iterated extension of elementary dominoes as $R$-modules, and dimension of $U$ is defined to be $\dim(U):=\dim_k(U^0/V)$.
 
 ### The domino $U$ and the Hodge–Witt filtration
 
@@ -82,16 +82,16 @@ $$\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_\mathrm{crys} = W\langle p^{b_1} e_1,\; p^{
 
 For example, the $b$-sequence $(1, 0, 0, 1)$ with basis $\{e_1, e_2, e_3, e_4\}$ gives rise to $\mathrm{Fil}^1_{\mathrm{HW}} = W\langle pe_1, e_2, e_3, pe_4\rangle$.
 
-This algorithm computes the following invariants of $U$ (and hence of $\widehat{\mathrm{Br}}_X$):
+The algorithm will take as input a cyclic $F$-crystal $(M,\varphi):=(H^1_{\mathrm{crys}}(X/W),\varphi)$ of rank $2g$, represented as an exponent sequence $a=(a_1,\ldots,a_{2g})$. It will compute the following invariants of $X$ and its associated domino $U$ (and hence of $\widehat{\mathrm{Br}}_X$):
 
 | Invariant | Description |
 |-----------|-------------|
 | **a-number** | Number of cyclic $0 \to 1$ transitions in the exponent sequence; equals $\dim_k \mathrm{Hom}(\alpha_p, X[p])$ |
 | **dim** | $\dim U$: depends only on $g$ and the Newton polygon of $H^2$ (all Newton polygons coincide in the supersingular case) |
-| **p-exp** | Smallest power of $p$ annihilating $U$ |
-| **type-seq** | By Ekedahl, every domino carries a unique decreasing filtration whose $i$-th associated graded piece is a direct sum of elementary dominoes $U_i$. The type sequence is the nondecreasing list of integers $i$ appearing in this graded, counted with multiplicity |
-| **Isog** | Isogeny type of $\widehat{\mathrm{Br}}_X$, computed via the Greene–Kleitman algorithm (leaf-peeling + partition conjugation) |
-| **σ** | **Generalized Artin invariant**: sum of all type-seq entries across all $\Lambda^2$-components. Generalizes the classical Artin invariant from the $g = 2$ case, where $\dim U = 1$ and the type sequence consists of a single integer $\sigma \in \{1, 2\}$ |
+| **p-exp** | The smallest power of $p$ annihilating $U$ |
+| **type-seq** | By Ekedahl, every domino carries a unique decreasing filtration whose $i$-th associated graded piece is a direct sum of elementary dominoes $U_i$. The type sequence is the nondecreasing list of integers $i$ appearing in this associate graded, counted with multiplicity |
+| **Isog** | Isogeny type of $\widehat{\mathrm{Br}}_X$, computed via the **Greene–Kleitman algorithm** (leaf-peeling + partition conjugation) |
+| **σ** | **Generalized Artin invariant**: sum of all entries in the type-seq of $U$. This generalizes the classical Artin invariant from the $g = 2$ case, where $\dim U = 1$ and the type sequence consists of a single integer $\sigma \in \{1, 2\}$ |
 
 ---
 
@@ -99,24 +99,24 @@ This algorithm computes the following invariants of $U$ (and hence of $\widehat{
 
 ### Step 1 — Exponent sequences
 
-Given $g \geq 1$, enumerate all binary sequences of length $2g$ with exactly $g$ ones, **up to cyclic rotation**. The canonical representative of each class is chosen as the lexicographically smallest rotation.
+Given $g \geq 1$, enumerate all binary sequences of length $2g$ with exactly $g$ copies of $0$'s and $g$ copies of $1$'s, **up to cyclic rotation**. The canonical representative of each class is chosen as the lexicographically smallest rotation.
 
-### Step 2 — $\Lambda^2$ decomposition
+### Step 2 — Taking $\Lambda^2$ and decomposition
 
-The exterior square $\Lambda^2 M$ decomposes into $g$ components indexed by a shift $i \in \{1, \ldots, g\}$. For $a = (a_1, \ldots, a_{2g})$:
+The exterior square $\Lambda^2 M$ decomposes into $g$ direct summands of $F$-crystals indexed by a shift $i \in \{1, \ldots, g\}$. For simplicity, we will refer to these direct summands as **components**. For $a = (a_1, \ldots, a_{2g})$:
 
-- For $1 \leq i \leq g-1$: component of length $2g$ with $j$-th entry $a_j + a_{j+i \bmod 2g}$
-- For $i = g$: component of length $g$ with $j$-th entry $a_j + a_{j+g}$
+- For $1 \leq i \leq g-1$: there is a component of length $2g$ with $j$-th entry $a_j + a_{j+i \bmod 2g}$
+- For $i = g$: there is a component of length $g$ with $j$-th entry $a_j + a_{j+g}$
 
 Each component has entries in $\{0, 1, 2\}$ and sum equal to its length, reflecting that $\Lambda^2 M$ has all slopes $1$.
 
 ### Step 3 — Hodge–Witt exponent sequence (b-sequence)
 
-Each $\Lambda^2$-component $a$ determines the **first Hodge–Witt filtered piece** of that component. Given component basis $e_1, \ldots, e_n$, the exponent sequence $b = (b_1, \ldots, b_n)$ of $\mathrm{Fil}^1_{\mathrm{HW}}$ is computed by:
+Each $\Lambda^2$-component with an exponent sequence $a$ determines the **first Hodge–Witt filtered piece** of that component. Given component basis $e_1, \ldots, e_n$, the exponent sequence $b = (b_1, \ldots, b_n)$ of $\mathrm{Fil}^1_{\mathrm{HW}}$ is computed by the rules:
 
 $$b_1 = 0, \qquad b_{k+1} = b_k + a_k - 1.$$
 
-Since $\sum a_i = n$, the sequence closes ($b_n = b_1$ before normalization), reflecting the cyclic structure of the filtration. We shift so $\min(b_i) = 0$. Each entry $b_i$ records the power of $p$ scaling $e_i$ inside $\mathrm{Fil}^1_{\mathrm{HW}} = W\langle p^{b_1}e_1, \ldots, p^{b_n}e_n\rangle$ (see the [domino section](#the-domino-u-and-the-hodgewitt-filtration) above). Each step satisfies $b_{k+1} - b_k = a_k - 1 \in \{-1, 0, +1\}$.
+Since $\sum a_i = n$, the sequence closes ($b_{n+1} = b_1$ before normalization), reflecting the cyclic structure of the filtration. We shift so $\min(b_i) = 0$. Each entry $b_i$ records the power of $p$ scaling $e_i$ inside $\mathrm{Fil}^1_{\mathrm{HW}} = W\langle p^{b_1}e_1, \ldots, p^{b_n}e_n\rangle$ (see the [domino section](#the-domino-u-and-the-hodgewitt-filtration) above). Each step satisfies $b_{k+1} - b_k = a_k - 1 \in \{-1, 0, +1\}$.
 
 ### Step 4 — Indecomposable decomposition
 
@@ -132,9 +132,9 @@ For each indecomposable arc $(b_1, \ldots, b_m)$:
 
   $$\mathrm{type\text{-}seq}(b_1, \ldots, b_m) = \mathrm{Tree}\!\bigl(m,\; \text{children from type-seq of indecomp. parts of } (b_1{-}1,\ldots,b_m{-}1)\bigr)$$
 
-  terminating when all values reach zero (leaf node). Node labels are arc lengths; the multiset of all labels, sorted nondecreasing, is the type sequence of $U$.
+  terminating when all values reach zero (leaf node). Node labels are arc lengths. The type sequence of $U$ is computed from the multiset of all labels, sorted nondecreasing.
 
-For a full $\Lambda^2$-component, dim and p-exp are summed/maximized over all arcs.
+For a full $\Lambda^2$-component, $\dim$ (resp. $p$-$\text{exp}$) is the sum (resp. the maximimum} over all arcs.
 
 ### Step 6 — Isog partition
 
@@ -153,7 +153,7 @@ The **generalized Artin invariant** $\sigma$ is the sum of all type-seq entries 
 
 ## Worked Example: supergeneral abelian surface ($g = 2$)
 
-Take $a = (0, 0, 1, 1)$. This is the exponent sequence of a supersingular abelian surface whose Dieudonné module is $M = \mathbb{D}/\mathbb{D}(F^2 - V^2)$, where $\mathbb{D} = W_\sigma[F, V]/(FV = VF = p)$ is the Dieudonné ring. Under the basis $\{1, F, F^2, V\}$ of $M$, the $F$-action is given by the cyclic matrix with exponent sequence $(0, 0, 1, 1)$: the first two basis vectors are mapped with no $p$-factor and the last two with a factor of $p$.
+Take $a = (0, 0, 1, 1)$. This is the exponent sequence of a supersingular abelian surface whose Dieudonné module is $M = \mathbb{D}/\mathbb{D}(F^2 - V^2)$, where $\mathbb{D} = W_\sigma[F, V]/(FV = VF = p)$ is the Dieudonné ring. Under the basis $\{1, F, F^2, V\}$ of $M$, the $\varphi$-action is given by the cyclic matrix with exponent sequence $(0, 0, 1, 1)$: the first two basis vectors are mapped with no $p$-factor and the last two with a factor of $p$.
 
 **Step 1.** $a$ is the canonical representative of its rotation class. The a-number is $1$ (one cyclic $0\to 1$ transition, at position $1\to 2$).
 
@@ -162,7 +162,7 @@ Take $a = (0, 0, 1, 1)$. This is the exponent sequence of a supersingular abelia
 - Shift $i=1$ (length $2g = 4$): $\quad a^{(1)} = (a_1+a_2,\; a_2+a_3,\; a_3+a_4,\; a_4+a_1) = (0, 1, 2, 1)$
 - Shift $i=2=g$ (length $g = 2$): $\quad a^{(2)} = (a_1+a_3,\; a_2+a_4) = (1, 1)$
 
-**Step 3.** Hodge–Witt exponent sequences.
+**Step 3.** Exponent sequences for $\mathrm{Fil}^1_{\mathrm{HW}}\, H^2_{\mathrm{crys}}$ (the $b$-sequence):
 
 *Component 1*, $a^{(1)} = (0,1,2,1)$, basis $\{e_1, e_2, e_3, e_4\}$ for the corresponding piece of $H^2_{\mathrm{crys}}$:
 
